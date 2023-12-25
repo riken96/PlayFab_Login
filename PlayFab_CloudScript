@@ -1,0 +1,102 @@
+handlers.setupWinLossData = function(){
+	var WinLossDictionary ={  
+		"Wins" : 0,
+		"Losses" :0
+ 	};
+
+	var playerDataToUpdate = JSON.stringify(WinLossDictionary);
+
+	var updateDataRequest = server.UpdateUserData({
+		PlayFabId : currentPlayerId,
+		Data:{
+			"PlayerData" : playerDataToUpdate 
+	    }	
+	});
+
+	return {success: true, message: "Player Win.Loss Data Ready"};
+}
+
+handlers.updateLevelOneRecordTimeStat = function(args, context){
+    
+    var timeInSeconds = args.timeInSeconds;
+    
+    	var updateWinRecord = server.UpdatePlayerStatistics({
+	   PlayFabId: currentPlayerId,
+	   Statistics: [{
+	       StatisticName: "Level 1 Record Times",
+	       Value: timeInSeconds
+	   }]
+	    
+	});
+    
+    return {success: true, message: "Level One Time Record was Updated"};
+}
+
+handlers.updateLevelTwoRecordTimeStat = function(args, context){
+    
+    var timeInSeconds = args.timeInSeconds;
+    
+    	var updateWinRecord = server.UpdatePlayerStatistics({
+	   PlayFabId: currentPlayerId,
+	   Statistics: [{
+	       StatisticName: "Level 2 Record Times",
+	       Value: timeInSeconds
+	   }]
+	    
+	});
+    
+    return {success: true, message: "Level Two Time Record was Updated"};
+}
+
+handlers.addonWinToPlayerData = function(){
+    
+    var playerData = server.GetUserData({
+        PlayFabId: currentPlayerId,
+        Key: ["PlayerData"],
+    });
+    
+    var playerDataJson = JSON.parse(playerData.Data.PlayerData.Value);
+    playerDataJson.Wins = playerDataJson.Wins + 1;
+    
+    var playerDataToUpdate = JSON.stringify(playerDataJson);
+    
+    	var updateDataRequest = server.UpdateUserData({
+		PlayFabId : currentPlayerId,
+		Data:{
+			"PlayerData" : playerDataToUpdate 
+	    }	
+	});
+	
+	var updateWinRecord = server.UpdatePlayerStatistics({
+	   PlayFabId: currentPlayerId,
+	   Statistics: [{
+	       StatisticName: "Wins Record",
+	       Value: playerDataJson.Wins
+	   }]
+	    
+	});
+    
+    return {success: true, message: "One Win was add to the player's Data"};
+}
+
+handlers.addonLossToPlayerData = function(){
+    
+    var playerData = server.GetUserData({
+        PlayFabId: currentPlayerId,
+        Key: ["PlayerData"],
+    });
+    
+    var playerDataJson = JSON.parse(playerData.Data.PlayerData.Value);
+    playerDataJson.Losses = playerDataJson.Losses + 1;
+    
+    var playerDataToUpdate = JSON.stringify(playerDataJson);
+    
+    	var updateDataRequest = server.UpdateUserData({
+		PlayFabId : currentPlayerId,
+		Data:{
+			"PlayerData" : playerDataToUpdate 
+	    }	
+	});
+    
+    return {success: true, message: "One Win was add to the player's Data"};
+}
